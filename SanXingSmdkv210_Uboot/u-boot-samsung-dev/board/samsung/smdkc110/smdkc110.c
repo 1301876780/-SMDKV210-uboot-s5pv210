@@ -183,7 +183,8 @@ int checkboard(void)
 ulong virt_to_phy_smdkc110(ulong addr)
 {
 	if ((0xc0000000 <= addr) && (addr < 0xd0000000))
-		return (addr - 0xc0000000 + 0x20000000);
+		return (addr - 0xc0000000 + 0x30000000);
+	//应用软件虚拟地址转物理地址函数修改
 	else
 		printf("The input address don't need "\
 			"a virtual-to-physical translation : %08lx\n", addr);
