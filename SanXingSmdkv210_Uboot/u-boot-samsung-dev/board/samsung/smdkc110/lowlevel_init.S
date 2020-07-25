@@ -115,7 +115,7 @@ lowlevel_init:
 	beq     1f			/* r0 == r1 then skip sdram init   */
 
 	/* init PMIC chip */
-	bl PMIC_InitIp
+	/*bl PMIC_InitIp*///导致uboot没有任何打印。注释掉电源管理集成电路，我们开发板没有这个模块。
 
 	/* init system clock */
 	bl system_clock_init
