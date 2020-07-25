@@ -466,10 +466,16 @@
 #endif
 
 #define CONFIG_NR_DRAM_BANKS    2          /* we have 2 bank of DRAM */
-#define SDRAM_BANK_SIZE         0x20000000    /* 512 MB */
+//#define SDRAM_BANK_SIZE         0x20000000    /* 512 MB三星原厂开发板一块DRAM大小 */
+#define SDRAM_BANK_SIZE         0x10000000    /* 256 MB 我们开发板一块DRAM大小*/
+
 #define PHYS_SDRAM_1            MEMORY_BASE_ADDRESS /* SDRAM Bank #1 */
 #define PHYS_SDRAM_1_SIZE       SDRAM_BANK_SIZE
-#define PHYS_SDRAM_2            (MEMORY_BASE_ADDRESS + SDRAM_BANK_SIZE) /* SDRAM Bank #2 */
+//#define PHYS_SDRAM_2            (MEMORY_BASE_ADDRESS + SDRAM_BANK_SIZE) /* SDRAM Bank #2 */
+/*由于修改了SDRAM_BANK_SIZE为256M. 上面这个PHYS_SDRAM_2起始地址会变为0x30000000。
+如果想修改两片内存的起始地址，修改时要慎重，不仅仅只修改这一处而已*/
+#define PHYS_SDRAM_2 			0x40000000
+
 #define PHYS_SDRAM_2_SIZE       SDRAM_BANK_SIZE
 
 #define CFG_FLASH_BASE		0x80000000
