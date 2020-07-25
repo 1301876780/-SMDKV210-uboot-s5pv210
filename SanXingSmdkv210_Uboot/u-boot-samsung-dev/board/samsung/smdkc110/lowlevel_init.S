@@ -593,7 +593,9 @@ mmu_table:
 	.set __base,__base+1
 	.endr
 
-	.set __base,0x200
+	/*.set __base,0x200*/
+	.set __base,0x300 //将物理地址0x300开始的256M映射到虚拟地址0xD00 - 0xC00
+
 	// 256MB for SDRAM with cacheable
 	.rept 0xD00 - 0xC00
 	FL_SECTION_ENTRY __base,3,0,1,1

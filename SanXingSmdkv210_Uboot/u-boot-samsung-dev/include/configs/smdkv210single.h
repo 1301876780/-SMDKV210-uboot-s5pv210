@@ -69,7 +69,8 @@
 /* skip to load BL2 */
 //#define FAST_BOOT		1
 
-#define MEMORY_BASE_ADDRESS	0x20000000
+//#define MEMORY_BASE_ADDRESS	0x20000000
+#define MEMORY_BASE_ADDRESS	0x30000000 //相关宏定义修改:①设置我们想要的开发板DRAM0起始地址
 
 /* input clock of PLL */
 #define CONFIG_SYS_CLK_FREQ	24000000	/* the SMDK6400 has 24MHz input clock */
@@ -404,8 +405,9 @@
 	defined(CONFIG_CLK_400_100_166_133)
 
 #if defined(CONFIG_MCP_SINGLE)
-
-#define DMC0_MEMCONFIG_0	0x20E01323	// MemConfig0	256MB config, 8 banks,Mapping Method[12:15]0:linear, 1:linterleaved, 2:Mixed
+//DDR初始化参数更改:①chip_base由0x20改为0x30 ②我们一片DRAM寻址空间是256M范围(大小0x10000000)0x0--0x0fffffff。
+//所以chip_mask由0xE0该为0xF0
+#define DMC0_MEMCONFIG_0	0x30F01323	// MemConfig0	256MB config, 8 banks,Mapping Method[12:15]0:linear, 1:linterleaved, 2:Mixed
 #define DMC0_MEMCONFIG_1	0x40F01323	// MemConfig1
 #define DMC0_TIMINGA_REF	0x00000618	// TimingAref	7.8us*133MHz=1038(0x40E), 100MHz=780(0x30C), 20MHz=156(0x9C), 10MHz=78(0x4E)
 #define DMC0_TIMING_ROW		0x28233287	// TimingRow	for @200MHz
@@ -464,6 +466,7 @@
 #define UART_UBRDIV_VAL		34
 #define UART_UDIVSLOT_VAL	0xDDDD
 #endif
+//相关宏定义修改:②其它应用层定义修改
 
 #define CONFIG_NR_DRAM_BANKS    2          /* we have 2 bank of DRAM */
 //#define SDRAM_BANK_SIZE         0x20000000    /* 512 MB三星原厂开发板一块DRAM大小 */
