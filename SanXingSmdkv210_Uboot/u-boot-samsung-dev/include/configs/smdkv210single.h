@@ -130,11 +130,21 @@
 
 #define CONFIG_DRIVER_DM9000	1
 
-#ifdef CONFIG_DRIVER_DM9000
-#define CONFIG_DM9000_BASE		(0xA8000000)
+#ifdef CONFIG_DRIVER_DM9000//数据地址线复用
+//#define CONFIG_DM9000_BASE		(0xA8000000)
+/*CONFIG_DM9000_BASE是DM9000网卡通过SROM bank映射到SoC中地址空间中的地址。
+这个地址的值取决于硬件接到了哪个bank，这个bank的基地址是SoC自己定义好的。
+譬如我们这里接到了bank1上，bank1的基地址是0x88000000.
+*/
+#define CONFIG_DM9000_BASE		(0x88000000)
+//)DM9000_IO表示访问芯片IO的基地址，直接就是CONFIG_DM9000_BASE；
 #define DM9000_IO			(CONFIG_DM9000_BASE)
 #if defined(DM9000_16BIT_DATA)
-#define DM9000_DATA			(CONFIG_DM9000_BASE+2)
+//DM9000_DATA表示我们访问数据时的基地址，因为DM9000芯片的CMD引脚接到了ADDR2，因此这里要+4（0b100，对应ADDR2)
+//由于数据地址线复用，dm9000 cmd引脚置1代表数据，置0代表index(可以理解为地址)
+//#define DM9000_DATA			(CONFIG_DM9000_BASE+2)
+#define DM9000_DATA			(CONFIG_DM9000_BASE+4)
+
 #else
 #define DM9000_DATA			(CONFIG_DM9000_BASE+1)
 #endif

@@ -65,11 +65,18 @@ static inline void delay(unsigned long loops)
 static void dm9000_pre_init(void)
 {
 	unsigned int tmp;
-
+//这个宏用来表示DM9000工作在16位总线模式下
 #if defined(DM9000_16BIT_DATA)
-	SROM_BW_REG &= ~(0xf << 20);
+/*	
+	SROM_BW_REG &= ~(0xf << 20);每4bit代表一个srom的设置，也就是三星的DM9000接到了SOC的srom5
 	SROM_BW_REG |= (0<<23) | (0<<22) | (0<<21) | (1<<20);
-
+*/
+SROM_BW_REG &= ~(0xf << 4); //原理图上DM9000的cs#接到了SOC的CSn1,也就是我们的DM9000接到了SOC的srom1
+SROM_BW_REG |= (1<<7) | (1<<6) | (1<<5) | (1<<4);
+/*bit7~bit4分别为ByteEnable1、WaitEnable1、AddrMode1、DataWidth1
+bit7~6时钟相关。AddrMode1我们是soc的data0-15对应DM9000的SD0-15是一一对应关系置1 = SROM_ADDR is byte base address
+DataWidth1我们是16bit模式(16个data线)，置1 = 16-bit
+*/
 #else	
 	SROM_BW_REG &= ~(0xf << 20);
 	SROM_BW_REG |= (0<<19) | (0<<18) | (0<<16);
@@ -77,8 +84,10 @@ static void dm9000_pre_init(void)
 	SROM_BC5_REG = ((0<<28)|(1<<24)|(5<<16)|(1<<12)|(4<<8)|(6<<4)|(0<<0));
 
 	tmp = MP01CON_REG;
-	tmp &=~(0xf<<20);
-	tmp |=(2<<20);
+/*	tmp &=~(0xf<<20);
+	tmp |=(2<<20);*/ //Port Group MP0_1 Control Register中MP01CON_REGbit4-7设置为0x0010代表选中SROM_CSn1
+	tmp &=~(0xf<<4);
+	tmp |=(2<<4);
 	MP01CON_REG = tmp;
 }
 
