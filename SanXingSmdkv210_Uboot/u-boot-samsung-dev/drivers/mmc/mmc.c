@@ -814,7 +814,12 @@ static int mmc_read_ext_csd(struct mmc *host)
 	}
 
 	ext_csd_struct = ext_csd[EXT_CSD_REV];
-	if (ext_csd_struct > 5) {
+/*	从卡端读取ext_csd寄存器是成功的，并且从读取结果中拿到了卡的版本号信息。然后代码对版本号进行了判断，
+并且如果版本号大于5就会报错并且函数错误退出。这就是问题所正。
+问题就是：我们使用的iNand卡的版本号大于5，而uboot代码本身不处理版本号大于5的卡，因此出错了。
+怎么解决？第一可能，换卡；第二可能，软件修复。
+*/
+	if (ext_csd_struct > 10) {
 		printf("unrecognised EXT_CSD structure "
 			"version %d\n", ext_csd_struct);
 		err = -1;
